@@ -1,7 +1,9 @@
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Stars, Text } from '@react-three/drei';
+import { OrbitControls, Stars } from '@react-three/drei';
 import PathLine from './PathLine';
 import CourseStar from './CourseStar';
+import { SheetProvider, PerspectiveCamera } from '@theatre/r3f';
+import { demoSheet } from '../../theatre'; // Import from our new file
 
 function Scene({ courses, completedCourses, onNodeClick }) {
   const courseMap = new Map(courses.map(course => [course.id, course]));
@@ -12,6 +14,11 @@ function Scene({ courses, completedCourses, onNodeClick }) {
 
   return (
     <Canvas camera={{ position: [0, 5, 50], fov: 75 }}>
+      {/* Use the imported sheet */}
+      <SheetProvider sheet={demoSheet}>
+        <PerspectiveCamera theatreKey="Camera" makeDefault fov={75} position={[0, 5, 50]} />
+      </SheetProvider>
+      
       <ambientLight intensity={0.5} />
       <pointLight position={[10, 10, 10]} />
       <Stars />
@@ -36,7 +43,6 @@ function Scene({ courses, completedCourses, onNodeClick }) {
           const startPoint = [prereqNode.position_x, prereqNode.position_y, prereqNode.position_z];
           const endPoint = [course.position_x, course.position_y, course.position_z];
           
-          // The fix is in the 'key' prop below
           return <PathLine key={`${prereqId}-${course.id}`} start={startPoint} end={endPoint} />;
         });
       })}

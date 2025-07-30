@@ -1,10 +1,11 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Role(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
 
-    def _str_(self):
+    def __str__(self):
         return self.name
 
 class CourseNode(models.Model):
@@ -22,5 +23,14 @@ class CourseNode(models.Model):
     position_y = models.FloatField(default=0)
     position_z = models.FloatField(default=0)
 
-    def _str_(self):
+    def __str__(self):
         return self.title
+
+class UserProgress(models.Model):
+    # Link progress to a specific user. Each user can only have one progress entry.
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    # Store the list of all courses the user has completed.
+    completed_courses = models.ManyToManyField(CourseNode, blank=True)
+
+    def __str__(self):
+        return f"Progress for {self.user.username}"

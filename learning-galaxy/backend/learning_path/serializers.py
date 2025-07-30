@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Role, CourseNode
+from .models import Role, CourseNode, UserProgress
 
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,3 +23,8 @@ class CourseNodeSerializer(serializers.ModelSerializer):
             'position_y', 
             'position_z'
         ]
+
+class UserProgressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProgress
+        fields = ['completed_courses']

@@ -3,15 +3,14 @@ import Scene from './components/3d/Scene';
 import CourseDetailsModal from './components/ui/CourseDetailsModal';
 import { fetchCourses } from './services/api';
 import './index.css';
+import { demoSheet } from './theatre';
 
 function App() {
-  // State hooks
   const [courses, setCourses] = useState(null);
   const [error, setError] = useState(null);
   const [completedCourses, setCompletedCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
 
-  // Effect to fetch data on mount
   useEffect(() => {
     fetchCourses()
       .then(data => {
@@ -24,18 +23,26 @@ function App() {
       .catch(err => setError(err.message));
   }, []);
 
-  // Handler for opening the modal
-  const handleNodeClick = (courseId) => {
-    const course = courses.find(c => c.id === courseId);
-    setSelectedCourse(course);
+  const handleNodeClick = (course) => {
+    // Get a reference to the camera object at the moment of the click
+    const cameraSheetObject = demoSheet.object('Camera');
+
+    // Tell Theatre.js to animate the camera to the new position
+    cameraSheetObject.setValues({
+      position: { x: course.position_x, y: course.position_y, z: course.position_z + 10 },
+    });
+
+    // Play a short sequence to trigger the animation
+    demoSheet.sequence.play({ duration: 1.5 }).then(() => {
+      // Open the modal AFTER the animation finishes
+      setSelectedCourse(course);
+    });
   };
 
-  // Handler for completing a course
   const handleCourseComplete = (courseId) => {
     setCompletedCourses(prev => prev.includes(courseId) ? prev : [...prev, courseId]);
   };
 
-  // Render logic
   if (error) return <div className="message">Error: {error}</div>;
   if (!courses) return <div className="message">Loading Galaxy...</div>;
 

@@ -1,20 +1,25 @@
 import { Text } from '@react-three/drei';
-import { motion } from 'framer-motion'; // Note the '3d' import
+import { useFrame } from '@react-three/fiber';
+import { val } from '@theatre/core';
+import { editable, PerspectiveCamera } from '@theatre/r3f';
+import { useRef } from 'react';
 
 function CourseStar({ node, isCompleted, isUnlocked, onNodeClick }) {
-  // Determine colors based on state
   const color = isCompleted ? "gold" : isUnlocked ? "royalblue" : "#333";
   const emissiveColor = isCompleted ? "gold" : isUnlocked ? "royalblue" : "black";
+  const starRef = useRef();
+
+  // This is a simplified animation, Theatre.js can do much more complex sequences
+  useFrame(({ camera }) => {
+    // A subtle floating animation can be added here if desired
+  });
 
   return (
-    <motion.group
+    <group 
+      ref={starRef}
       key={node.id}
       position={[node.position_x, node.position_y, node.position_z]}
-      // Add hover effect only if unlocked
-      whileHover={isUnlocked ? { scale: 1.2 } : { scale: 1 }}
-      // Pass the click event up if unlocked
-      onPointerDown={() => isUnlocked && onNodeClick(node.id)}
-      animate={{ scale: isUnlocked ? 1 : 0.8 }} // Animate unlocked nodes
+      onPointerDown={() => isUnlocked && onNodeClick(node)}
     >
       <mesh>
         <sphereGeometry args={[1.5, 32, 32]} />
@@ -31,11 +36,11 @@ function CourseStar({ node, isCompleted, isUnlocked, onNodeClick }) {
         color="white"
         anchorX="center"
         anchorY="middle"
-        visible={isUnlocked || isCompleted} // Only show text for visible nodes
+        visible={isUnlocked || isCompleted}
       >
         {node.title}
       </Text>
-    </motion.group>
+    </group>
   );
 }
 
