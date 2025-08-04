@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Third-party apps
     'rest_framework',
+    'rest_framework.authtoken',
     'corsheaders',
     # Your local apps
     'learning_path',
@@ -107,4 +108,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:5174", # Adding both common Vite ports just in case
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:5174",
 ]
+
+# --- REST FRAMEWORK SETTINGS ---
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}

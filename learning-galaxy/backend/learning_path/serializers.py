@@ -4,7 +4,7 @@ from .models import Role, CourseNode, UserProgress
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Role
-        fields = '_all_'
+        fields = ['id', 'name', 'description']
 
 class CourseNodeSerializer(serializers.ModelSerializer):
     # 'role' will be represented by its string name from the Role model
@@ -17,7 +17,10 @@ class CourseNodeSerializer(serializers.ModelSerializer):
             'id', 
             'title', 
             'description', 
+            'content',
+            'course_url',
             'role', 
+            'parent',
             'prerequisites', 
             'position_x', 
             'position_y', 

@@ -11,9 +11,14 @@ class Role(models.Model):
 class CourseNode(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
+    content = models.TextField(blank=True, help_text="Detailed course content in markdown format")
+    course_url = models.URLField(blank=True, help_text="External link to the course")
     
     # Each course can belong to one primary role, like "Backend" or "Frontend"
     role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True, blank=True, related_name='courses')
+    
+    # Parent-child relationships for hierarchical structure
+    parent = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='children')
     
     # This is the key field: It allows a course to require other courses as prerequisites
     prerequisites = models.ManyToManyField('self', blank=True, symmetrical=False)
